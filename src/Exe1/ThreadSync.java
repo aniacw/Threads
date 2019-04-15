@@ -5,13 +5,15 @@ public class ThreadSync {
 
     public static void main(String[] args) {
         User u = new User();
-        Worker w = new Worker();
+
         u.start();
         try {
             u.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        Worker w = new Worker();
         w.start();
     }
 

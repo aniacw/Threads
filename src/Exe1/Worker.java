@@ -6,18 +6,18 @@ public class Worker extends Thread {
 
     private String inInput;
     private String outInput;
-    private User u = new User();
+    private User user;
     private String content;
 
 
     public Worker() {
-        u = new User();
-        this.inInput = u.getIn();
-        this.outInput = u.getOut();
+//        this.
+//        this.
     }
 
     public void run() {
-
+        inInput = user.getIn();
+        System.out.println(inInput);
         try {
             readFile();
         } catch (FileNotFoundException e) {
@@ -31,7 +31,7 @@ public class Worker extends Thread {
     }
 
     public void readFile() throws FileNotFoundException {
-
+        inInput = user.getIn();
         BufferedReader br = new BufferedReader(new FileReader("resources\\" + inInput + ".txt"));
         try {
             StringBuilder sb = new StringBuilder();
@@ -49,7 +49,8 @@ public class Worker extends Thread {
     }
 
     public void writeFile() throws FileNotFoundException {
-        FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Ania\\Desktop\\nnn.txt");
+        outInput = user.getOut();
+        FileOutputStream fileOutputStream = new FileOutputStream("resources\\" + outInput + ".txt");
         byte[] b = content.getBytes();
         byte[] reversedB = new byte[b.length];
         int index = 0;
