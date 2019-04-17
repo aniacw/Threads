@@ -1,33 +1,105 @@
 package Exe1;
 
+import javafx.concurrent.Worker;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class User extends Thread {
 
-    private String in;
-    private String out;
+    public class MessageHandler implements Exe1.MessageHandler {
+        public void send(String message){
+            synchronized (messages){
+                messages.add(message);
+            }
+        }
+    }
 
-    public User() {    }
+    private List<FileProcessorWorker> workers;
+    private List<String> messages;
+    private MessageHandler messageHandler;
+
+    public User() {
+        this.workers = new ArrayList<>();
+        this.messages = new ArrayList<>();
+        this.messageHandler=new MessageHandler();
+    }
+
+    public void addWorker(FileProcessorWorker w){
+        workers.add(w);
+        w.setMessageHandler(messageHandler);
+    }
+
+    public void addWorkers(List<FileProcessorWorker> workers){
+        for (FileProcessorWorker w : workers)
+            addWorker(w);
+    }
 
     public void run() {
-        System.out.println("Type 'in' file name");
         Scanner scanner = new Scanner(System.in);
-        in = scanner.next();
-        System.out.println("Type 'out' file name");
-        out = scanner.next();
-        scanner.close();
-        System.out.println("user part done");
+        String line;
+        System.out.println("Type 'in' and 'out' file name");
+        line = scanner.nextLine();
+        while(!line.equals("!")) {
+            if (line.equals("@"))
+                printReports();
+            else{
+                String[] parts = line.split("\\s+");
+                FileProcessorWorker worker = waitForAnyFreeWorker(500);
+                worker.addTask(parts[0], parts[1]);
+                System.out.println("Type 'in' and 'out' file name");
+            }
+            line = scanner.nextLine();
+        }
+        finishWorkers();
     }
 
-    public String getIn() {
-        return in;
+    private void finishWorkers(){
+        for (FileProcessorWorker w : workers)
+            w.finish();
+        for (FileProcessorWorker w : workers) {
+            try {
+                w.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public String getOut() {
-        return out;
+    private void printReports(){
+        synchronized (messages){
+            for (String s : messages)
+                System.out.println(s);
+            messages.clear();
+        }
     }
 
-    public void setIn(String in) {
-        this.in = in;
+    private FileProcessorWorker waitForAnyFreeWorker(int waitTimeMs){
+        FileProcessorWorker w = findFreeWorker();
+        if (w == null){
+            System.out.print("Waiting for worker");
+            //System.out.flush();
+            while (w == null){
+                System.out.print(".");
+                //System.out.flush();
+                try {
+                    Thread.sleep(waitTimeMs);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                w = findFreeWorker();
+            }
+            System.out.println();
+        }
+        return w;
+    }
+
+    private FileProcessorWorker findFreeWorker(){
+        for (FileProcessorWorker w: workers){
+            if (!w.isBusy())
+                return w;
+        }
+        return null;
     }
 }
