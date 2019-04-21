@@ -1,20 +1,10 @@
 package Exe1;
 
-import javafx.concurrent.Worker;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class User extends Thread {
-
-    public class MessageHandler implements Exe1.MessageHandler {
-        public void send(String message){
-            synchronized (messages){
-                messages.add(message);
-            }
-        }
-    }
 
     private List<FileProcessorWorker> workers;
     private List<String> messages;
@@ -23,15 +13,23 @@ public class User extends Thread {
     public User() {
         this.workers = new ArrayList<>();
         this.messages = new ArrayList<>();
-        this.messageHandler=new MessageHandler();
+        this.messageHandler = new MessageHandler();
     }
 
-    public void addWorker(FileProcessorWorker w){
+    public class MessageHandler implements Exe1.MessageHandler {
+        public void send(String message) {
+            synchronized (messages) {
+                messages.add(message);
+            }
+        }
+    }
+
+    public void addWorker(FileProcessorWorker w) {
         workers.add(w);
         w.setMessageHandler(messageHandler);
     }
 
-    public void addWorkers(List<FileProcessorWorker> workers){
+    public void addWorkers(List<FileProcessorWorker> workers) {
         for (FileProcessorWorker w : workers)
             addWorker(w);
     }
@@ -41,10 +39,10 @@ public class User extends Thread {
         String line;
         System.out.println("Type 'in' and 'out' file name");
         line = scanner.nextLine();
-        while(!line.equals("!")) {
+        while (!line.equals("!")) {
             if (line.equals("@"))
                 printReports();
-            else{
+            else {
                 String[] parts = line.split("\\s+");
                 FileProcessorWorker worker = waitForAnyFreeWorker(500);
                 worker.addTask(parts[0], parts[1]);
@@ -55,7 +53,7 @@ public class User extends Thread {
         finishWorkers();
     }
 
-    private void finishWorkers(){
+    private void finishWorkers() {
         for (FileProcessorWorker w : workers)
             w.finish();
         for (FileProcessorWorker w : workers) {
@@ -67,22 +65,20 @@ public class User extends Thread {
         }
     }
 
-    private void printReports(){
-        synchronized (messages){
+    private void printReports() {
+        synchronized (messages) {
             for (String s : messages)
                 System.out.println(s);
             messages.clear();
         }
     }
 
-    private FileProcessorWorker waitForAnyFreeWorker(int waitTimeMs){
+    private FileProcessorWorker waitForAnyFreeWorker(int waitTimeMs) {
         FileProcessorWorker w = findFreeWorker();
-        if (w == null){
+        if (w == null) {
             System.out.print("Waiting for worker");
-            //System.out.flush();
-            while (w == null){
+            while (w == null) {
                 System.out.print(".");
-                //System.out.flush();
                 try {
                     Thread.sleep(waitTimeMs);
                 } catch (InterruptedException e) {
@@ -95,8 +91,8 @@ public class User extends Thread {
         return w;
     }
 
-    private FileProcessorWorker findFreeWorker(){
-        for (FileProcessorWorker w: workers){
+    private FileProcessorWorker findFreeWorker() {
+        for (FileProcessorWorker w : workers) {
             if (!w.isBusy())
                 return w;
         }

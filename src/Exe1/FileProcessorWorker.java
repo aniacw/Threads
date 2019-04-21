@@ -1,14 +1,9 @@
 package Exe1;
 
-import javafx.util.Pair;
-
-import java.io.*;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicMarkableReference;
-import java.util.concurrent.atomic.AtomicReference;
+
 
 public abstract class FileProcessorWorker extends Thread {
 
@@ -25,7 +20,6 @@ public abstract class FileProcessorWorker extends Thread {
     private static int lastId = 0;
     private int id;
     private Queue<InOutFilenames> filesQueue;
-    private String content;
     private AtomicBoolean running;
     private AtomicBoolean busy;
     private MessageHandler messageHandler;
@@ -83,45 +77,4 @@ public abstract class FileProcessorWorker extends Thread {
 
     protected abstract void processFile(InOutFilenames filenames);
 
-//    private void readFile(String filename) throws FileNotFoundException {
-//
-//        BufferedReader br = new BufferedReader(new FileReader("resources\\" + filename));
-//        try {
-//            StringBuilder sb = new StringBuilder();
-//            String line = br.readLine();
-//
-//            while (line != null) {
-//                sb.append(line);
-//                sb.append(System.lineSeparator());
-//                line = br.readLine();
-//            }
-//            content = sb.toString();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private void writeFile(String filename) throws FileNotFoundException {
-//
-//        FileOutputStream fileOutputStream = new FileOutputStream("resources\\" + filename);
-//        byte[] b = content.getBytes();
-//        byte[] reversedB = new byte[b.length];
-//        int index = 0;
-//
-//        for (int i = b.length; i > 0; i--) {
-//            reversedB[index] = b[i - 1];
-//            index++;
-//        }
-//        try {
-//            fileOutputStream.write(reversedB);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            fileOutputStream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }

@@ -7,13 +7,8 @@ import java.util.List;
 public class ThreadSync {
 
 
-    public static double func(double x){
-        Math.sin(Math.cos(Math.log(Math.tan(x)))) + Math.cos(Math.sin(Math.log(Math.log(1.0 / Math.tan(x)))))
-    }
-
-
     public static void main(String[] args) {
-        User u=new User();
+        User u = new User();
         List<FileProcessorWorker> workers = initWorkers(2, SleepWorker.class);
         u.addWorkers(workers);
         u.start();
@@ -24,15 +19,15 @@ public class ThreadSync {
         }
     }
 
-    private static List<FileProcessorWorker> initWorkers(int n, Class workerClass){
-        List<FileProcessorWorker> workers=new ArrayList<>();
+    private static List<FileProcessorWorker> initWorkers(int n, Class workerClass) {
+        List<FileProcessorWorker> workers = new ArrayList<>();
         try {
             for (int i = 0; i < n; ++i) {
-                FileProcessorWorker w = (FileProcessorWorker)workerClass.getConstructor().newInstance();
+                FileProcessorWorker w = (FileProcessorWorker) workerClass.getConstructor().newInstance();
                 w.start();
                 workers.add(w);
             }
-        }catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return workers;
