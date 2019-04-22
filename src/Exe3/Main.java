@@ -8,11 +8,11 @@ public class Main {
         dataBase.initializeParcelLocker(10);
         dataBase.initializeParcel(50);
 
-        for(Parcel p : dataBase.getParcel().getParcelList()){
+        for (Parcel p : dataBase.getParcel().getParcelList()) {
             p.drawInitialParcelLocker(p.getParcelId(), 50);
+            dataBase.getParcelLockerParcelInitialMap().put(
+                    dataBase.getParcel().getInitialParcelLocker(), p);
         }
-
-
 
 
     }

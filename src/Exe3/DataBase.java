@@ -1,5 +1,7 @@
 package Exe3;
 
+import javafx.util.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,13 +9,16 @@ public class DataBase {
 
     private Parcel parcel;
     private ParcelLocker parcelLocker;
-    private Map<ParcelLocker, Parcel> parcelLockerParcelMap;
+    private Map<ParcelLocker, Parcel> parcelLockerParcelInitialMap;
+    private Pair<Parcel, ParcelLocker> parcelParcelLockerInitialPair;
+    private Pair<Parcel, ParcelLocker> parcelParcelLockerFinalPair;
 
 
     public DataBase() {
         parcel = new Parcel();
         parcelLocker = new ParcelLocker();
-        parcelLockerParcelMap = new HashMap<>();
+        parcelLockerParcelInitialMap = new HashMap<>();
+    //    parcelParcelLockerFinalPair = new Pair<>();
     }
 
 
@@ -35,5 +40,9 @@ public class DataBase {
 
     public Parcel getParcel() {
         return parcel;
+    }
+
+    public Map<ParcelLocker, Parcel> getParcelLockerParcelInitialMap() {
+        return parcelLockerParcelInitialMap;
     }
 }

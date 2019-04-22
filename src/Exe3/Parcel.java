@@ -29,7 +29,7 @@ public class Parcel {
     }
 
 
-    public void addParcelToList(Parcel newParcelId){
+    public void addParcelToList(Parcel newParcelId) {
         parcelList.add(newParcelId);
     }
 
@@ -39,10 +39,16 @@ public class Parcel {
             int initialParcelLockerId = (int) Math.random() * (parcelLockerQty - 1);
             initialParcelLocker = parcelLockerList.get(initialParcelLockerId);
         }
-
+        return initialParcelLocker;
     }
+
 
     public List<Parcel> getParcelList() {
         return parcelList;
+    }
+
+
+    public ParcelLocker getInitialParcelLocker() {
+        return initialParcelLocker;
     }
 }
