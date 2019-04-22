@@ -9,7 +9,7 @@ public class Main {
         dataBase.initializeParcel(50);
 
         for (Parcel p : dataBase.getParcel().getParcelList()) {
-            p.drawInitialParcelLocker(p.getParcelId(), 50);
+            p.drawInitialParcelLocker(p.getParcelId(), 10);
             dataBase.getParcelLockerParcelInitialMap().put(
                     dataBase.getParcel().getInitialParcelLocker(), p);
         }

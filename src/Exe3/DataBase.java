@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DataBase {
 
@@ -12,7 +13,14 @@ public class DataBase {
     private Map<ParcelLocker, Parcel> parcelLockerParcelInitialMap;
     private Pair<Parcel, ParcelLocker> parcelParcelLockerInitialPair;
     private Pair<Parcel, ParcelLocker> parcelParcelLockerFinalPair;
+    private static DataBase instance;
 
+
+    public static DataBase getInstance(){
+        if(instance == null)
+            instance = new DataBase();
+        return instance;
+    }
 
     public DataBase() {
         parcel = new Parcel();
@@ -26,16 +34,27 @@ public class DataBase {
         for (int i = 1; i <= parcelLockerQty; i++) {
             parcelLocker = new ParcelLocker();
             parcelLocker.setParcelLockerId(i);
+            parcel.getParcelLockerList().add(parcelLocker);
         }
     }
 
 
     public void initializeParcel(int parcelQty) {
-        for (int i = 1; i <= parcelQty; i++) {
-            parcel = new Parcel();
+        parcel.setParcelId(1);
+        parcel.addParcelToList(parcel);
+        for (int i = 2; i <= parcelQty; i++) {
+            Parcel parcel = new Parcel();
             parcel.setParcelId(i);
             parcel.addParcelToList(parcel);
         }
+    }
+
+
+    public ParcelLocker checkInitialParcelLocker(Parcel parcel) {
+        return parcelLockerParcelInitialMap.entrySet()
+                .stream()
+                .filter(parcelLockerParcelEntry -> Objects.equals(parcelLockerParcelEntry.getValue(), parcel))
+                .findAny().get().getKey();
     }
 
     public Parcel getParcel() {
