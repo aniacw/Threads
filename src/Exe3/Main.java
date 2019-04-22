@@ -1,13 +1,28 @@
 package Exe3;
 
 public class Main {
+
+    public static void main(String[] args) {
+
+        DataBase dataBase = new DataBase();
+        dataBase.initializeParcelLocker(10);
+        dataBase.initializeParcel(50);
+
+        for(Parcel p : dataBase.getParcel().getParcelList()){
+            p.drawInitialParcelLocker(p.getParcelId(), 50);
+        }
+
+
+
+
+    }
 }
 
 
 //Napisz z użyciem mechanizmów wielowątkowości system paczkomatów.
 //System składa się z paczkomatów, paczek i kurierów. Kurierzy są traktowani jako osobne byty,
-//reprezentowane przez oddzielne wątki, wykonujące określone czynności. Baza paczek i paczkomatów jest dla ułatwienia ogólnodostępna
-//i jest traktowana jako zasób, do którego chcą dostawać się kurierzy.
+//reprezentowane przez oddzielne wątki, wykonujące określone czynności.
+// Baza paczek i paczkomatów jest dla ułatwienia ogólnodostępna i jest traktowana jako zasób, do którego chcą dostawać się kurierzy.
 //Wkładanie paczek do paczkomatów jest realizowane po prostu jako wylosowanie paczkomatu źródłowego, zaadresowanym do losowego docelowego
 //i umieszczenie paczki w źródłowym. Takie zdarzenie powinno odbywać się losowo i powinien wykonywać to wątek główny.
 //Każdy kurier sprawdza stan paczkomatów i jeżeli wykryje paczkę wyciąga ją i transportuje do docelowego paczkomatu.

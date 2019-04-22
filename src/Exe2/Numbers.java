@@ -41,8 +41,10 @@ public class Numbers extends Thread {
 
     //zapisywanie przeliczonych fragmentow tablicy do nowej tablicy
     public void write(String fileName, int splitIndex) throws IOException {
-        for(int i = 0; i < splitIndex; i++){
-            newArray[i] = 
+        for (int i = 0; i < splitIndex; i++) {
+            synchronized (newArray) {
+               // newArray[i] =
+            }
         }
         Files.write(Paths.get("resources\\" + fileName), numbersList);
     }
