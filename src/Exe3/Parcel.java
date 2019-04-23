@@ -10,6 +10,7 @@ public class Parcel {
     private ParcelLocker parcelLocker;
     private List<Parcel> parcelList;
     private ParcelLocker initialParcelLocker;
+    private ParcelLocker finalParcelLocker;
     private List<ParcelLocker> parcelLockerList;
     private DataBase dataBase;
 
@@ -18,6 +19,8 @@ public class Parcel {
         parcelLocker = new ParcelLocker();
         parcelList = new ArrayList<>();
         parcelLockerList = new ArrayList<>();
+        initialParcelLocker = new ParcelLocker();
+        finalParcelLocker = new ParcelLocker();
         dataBase = DataBase.getInstance();
     }
 
@@ -49,13 +52,20 @@ public class Parcel {
 
 
     public ParcelLocker drawFinalParcelLocker(Parcel parcel, int parcelLockerQty) {
+        int result;
+
         for (int i = 1; i <= parcelLockerQty; i++) {
             initialParcelLocker = dataBase.checkInitialParcelLocker(parcel);
             Random random = new Random();
-            int result = random.nextInt(parcelLockerQty);
-                if (parcelLockerList.get(result) ==  )
+            result = random.nextInt(parcelLockerQty);
 
+            if (initialParcelLocker.equals(parcelLockerList.get(result))) {
+                drawFinalParcelLocker(parcel, parcelLockerQty);
+            } else {
+                finalParcelLocker = parcelLockerList.get(result);
+            }
         }
+        return finalParcelLocker;
     }
 
 
@@ -70,5 +80,9 @@ public class Parcel {
 
     public List<ParcelLocker> getParcelLockerList() {
         return parcelLockerList;
+    }
+
+    public ParcelLocker getFinalParcelLocker() {
+        return finalParcelLocker;
     }
 }

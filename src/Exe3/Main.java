@@ -4,15 +4,26 @@ public class Main {
 
     public static void main(String[] args) {
 
-        DataBase dataBase = new DataBase();
+        DataBase dataBase = DataBase.getInstance();
         dataBase.initializeParcelLocker(10);
         dataBase.initializeParcel(50);
 
+        //losowanie poczatkowych paczkomatow
         for (Parcel p : dataBase.getParcel().getParcelList()) {
             p.drawInitialParcelLocker(p.getParcelId(), 10);
             dataBase.getParcelLockerParcelInitialMap().put(
                     dataBase.getParcel().getInitialParcelLocker(), p);
         }
+
+
+        //losowanie koncowych paczkomatow
+        for (Parcel p : dataBase.getParcel().getParcelList()) {
+            p.drawFinalParcelLocker(p, 10);
+            dataBase.getParcelLockerParcelFinalMap().put(
+                    dataBase.getParcel().getFinalParcelLocker(), p);
+        }
+
+
 
 
     }

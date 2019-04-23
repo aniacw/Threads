@@ -11,13 +11,14 @@ public class DataBase {
     private Parcel parcel;
     private ParcelLocker parcelLocker;
     private Map<ParcelLocker, Parcel> parcelLockerParcelInitialMap;
+    private Map<ParcelLocker, Parcel> parcelLockerParcelFinalMap;
     private Pair<Parcel, ParcelLocker> parcelParcelLockerInitialPair;
     private Pair<Parcel, ParcelLocker> parcelParcelLockerFinalPair;
     private static DataBase instance;
 
 
-    public static DataBase getInstance(){
-        if(instance == null)
+    public static DataBase getInstance() {
+        if (instance == null)
             instance = new DataBase();
         return instance;
     }
@@ -26,7 +27,8 @@ public class DataBase {
         parcel = new Parcel();
         parcelLocker = new ParcelLocker();
         parcelLockerParcelInitialMap = new HashMap<>();
-    //    parcelParcelLockerFinalPair = new Pair<>();
+        parcelLockerParcelFinalMap = new HashMap<>();
+        //    parcelParcelLockerFinalPair = new Pair<>();
     }
 
 
@@ -57,11 +59,21 @@ public class DataBase {
                 .findAny().get().getKey();
     }
 
+
+    //check czy paczkomat jest pusty
+    public boolean ckeckIfEmpty(ParcelLocker parcelLocker) {
+        return parcelLockerParcelInitialMap.containsKey(parcelLocker);
+    }
+
     public Parcel getParcel() {
         return parcel;
     }
 
     public Map<ParcelLocker, Parcel> getParcelLockerParcelInitialMap() {
         return parcelLockerParcelInitialMap;
+    }
+
+    public Map<ParcelLocker, Parcel> getParcelLockerParcelFinalMap() {
+        return parcelLockerParcelFinalMap;
     }
 }
