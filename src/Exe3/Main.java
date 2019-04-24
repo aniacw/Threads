@@ -1,5 +1,8 @@
 package Exe3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -8,9 +11,12 @@ public class Main {
         dataBase.initializeParcelLocker(10);
         dataBase.initializeParcel(50);
 
+        dataBase.run();
+
+
         //losowanie poczatkowych paczkomatow
         for (Parcel p : dataBase.getParcel().getParcelList()) {
-            p.drawInitialParcelLocker(p.getParcelId(), 10);
+            p.randomizeInitialParcelLocker(p.getParcelId(), 10);
             dataBase.getParcelLockerParcelInitialMap().put(
                     dataBase.getParcel().getInitialParcelLocker(), p);
         }
@@ -18,14 +24,26 @@ public class Main {
 
         //losowanie koncowych paczkomatow
         for (Parcel p : dataBase.getParcel().getParcelList()) {
-            p.drawFinalParcelLocker(p, 10);
+            p.randomizeFinalParcelLocker(p, 10);
             dataBase.getParcelLockerParcelFinalMap().put(
                     dataBase.getParcel().getFinalParcelLocker(), p);
         }
 
+        List<Courier> couriers = initCouriers(3);
 
 
 
+    }
+
+    private static List<Courier> initCouriers (int couriersQty) {
+        List<Courier> courierList = new ArrayList<>();
+
+        for (int i = 0; i <couriersQty; i++){
+            Courier courier = new Courier();
+            courier.start();
+            courierList.add(courier);
+        }
+            return courierList;
     }
 }
 

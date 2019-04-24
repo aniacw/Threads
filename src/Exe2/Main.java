@@ -6,8 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 public class Main {
 
 
-
-
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IOException, IllegalAccessException {
 
         splitArray(5, "Numbers.txt");
@@ -17,7 +15,7 @@ public class Main {
     //wpisuje ile watkow (n)
     public static void splitArray(int n, String filename) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
 
-        Numbers numbers = Numbers.class.getConstructor().newInstance();
+        Numbers numbers = new Numbers();
         numbers.readNumbers(filename);
 
         //wg splitindex dziele tablice na czesci

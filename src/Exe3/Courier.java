@@ -1,12 +1,20 @@
 package Exe3;
 
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Courier extends Thread {
     private DataBase dataBase;
     private Parcel parcel;
     private ParcelLocker parcelLocker;
+
+    //sprawdzanie stanu paczkomatów
+    //napotkanie paczki do dostarczenia
+    //wyjęcie paczki - delay
+    //dostarczenie - delay w zal od dystansu
+    //delay - bezczynny
 
 
     public Courier() {
@@ -20,8 +28,9 @@ public class Courier extends Thread {
         checkParcelLocker();
     }
 
-    //tu cos namieszalam
+    //wywolywal tryGetParcel
     public void checkParcelLocker(ParcelLocker parcelLocker) {
+
         for (ParcelLocker locker : dataBase.getParcel().getParcelLockerList()) {
             if (dataBase.getParcelLockerParcelInitialMap().containsKey(locker)) {
                 List<Parcel> parcelPerKeyList = (ArrayList) dataBase.getParcelLockerParcelInitialMap().values();
@@ -45,6 +54,8 @@ public class Courier extends Thread {
 
 
     public void deliverParcel(Parcel parcel) {
+        dataBase.getParcelLockerParcelFinalMap().
+
 
     }
 }

@@ -3,39 +3,45 @@ package Exe2;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Scanner;
 
+//numbers do wczytania, zapisu danych i podzialu na wątki
+//konkretne dzialania niech wykona oddzielna klasa Worker wewnętrzna względem Numbers
+//Worker dostaje ref na tablicę, tab wynikową i zakres indeksów na których przeprowadza obliczenia
+//iteruje po danych, wykonuje oper mat, zapisuje w tab wynikowej na takim samym indeksie
 public class Numbers extends Thread {
 
-    private byte numbersList[];
-    private Integer randomNumbersArray[];
-    private Integer[] newArray;
+    private double[] numbersList;
+    private double[] newArray;
 
     //od razu w konstruktorze uzupelnial tablice wylosowanymi liczbami
-    public Numbers() {
-        numbersList = new byte[1000000];
-        randomNumbersArray = new Integer[1000000];
-        newArray = new Integer[1000000];
+    public Numbers(int arraySize) {
+        numbersList = new Integer[arraySize];
+        newArray = new Integer[arraySize];
         draw();
     }
 
 
     //czytanie liczb z pliku
     public void readNumbers(String fileName) throws IOException {
-        numbersList = Files.readAllBytes(Paths.get("resources\\" + fileName));
-        synchronized (randomNumbersArray) {
-            for (int i = 0; i < numbersList.length; i++) {
-                randomNumbersArray[i] = (int) numbersList[i];
+        int i = 0;
+        Scanner scanner = new Scanner("resources\\" + fileName);
+        while(scanner.hasNextLine()){
+            synchronized (numbersList) {
+                String newLine = scanner.nextLine();
+                numbersList[i] = Integer.parseInt(newLine);
+                i++;
             }
         }
-    }
+            }
 
 
     //losowanie liczb
     public void draw() {
         for (int i = 0; i < 1000000; i++) {
-            int random = (int) Math.random();
-            byte b = (byte) random;
-            numbersList[i] = b;
+            int random = (int) (Math.random()*100);
+            Integer s = random;
+            numbersList[i] = s;
         }
     }
 

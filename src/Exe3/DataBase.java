@@ -1,20 +1,14 @@
 package Exe3;
 
-import javafx.util.Pair;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+public class DataBase implements Runnable {
 
-public class DataBase {
-
-    private Parcel parcel;
-    private ParcelLocker parcelLocker;
-    private Map<ParcelLocker, Parcel> parcelLockerParcelInitialMap;
-    private Map<ParcelLocker, Parcel> parcelLockerParcelFinalMap;
-    private Pair<Parcel, ParcelLocker> parcelParcelLockerInitialPair;
-    private Pair<Parcel, ParcelLocker> parcelParcelLockerFinalPair;
+    private List<ParcelLocker> parcelLockerList;
     private static DataBase instance;
+    private ParcelLocker  initialParcelLocker;
+    private ParcelLocker  finalParcelLocker;
+    private int[] parcelLockerIndexes;
 
 
     public static DataBase getInstance() {
@@ -24,19 +18,17 @@ public class DataBase {
     }
 
     public DataBase() {
-        parcel = new Parcel();
-        parcelLocker = new ParcelLocker();
-        parcelLockerParcelInitialMap = new HashMap<>();
-        parcelLockerParcelFinalMap = new HashMap<>();
-        //    parcelParcelLockerFinalPair = new Pair<>();
+        parcelLockerList = new ArrayList<>();
     }
 
 
     public void initializeParcelLocker(int parcelLockerQty) {
+        parcelLockerIndexes = new int[parcelLockerQty];
         for (int i = 1; i <= parcelLockerQty; i++) {
-            parcelLocker = new ParcelLocker();
+            ParcelLocker parcelLocker = new ParcelLocker();
             parcelLocker.setParcelLockerId(i);
-            parcel.getParcelLockerList().add(parcelLocker);
+            parcelLockerList.add(parcelLocker);
+            parcelLockerIndexes[i-1] = i-1;
         }
     }
 
@@ -52,18 +44,50 @@ public class DataBase {
     }
 
 
-    public ParcelLocker checkInitialParcelLocker(Parcel parcel) {
-        return parcelLockerParcelInitialMap.entrySet()
-                .stream()
-                .filter(parcelLockerParcelEntry -> Objects.equals(parcelLockerParcelEntry.getValue(), parcel))
-                .findAny().get().getKey();
+    void createNewParcel(){
+        Random r = new Random();
+        int i = r.nextInt(parcelLockerIndexes.length);
+        int parcelLocekrIdx1 = parcelLockerIndexes[i];
+        int temp = parcelLockerIndexes[i];
+        parcelLockerIndexes[i] = parcelLockerIndexes[parcelLockerIndexes.length-1];
+        parcelLockerIndexes[parcelLockerIndexes.length-1]=temp;
+        int parcelLockerIdx2 = parcelLockerIndexes[r.nextInt(parcelLockerIndexes.length-1)];
+        Parcel parcel=new Parcel();
+        ParcelLocker initialLocker = parcelLockerList.get(parcelLocekrIdx1);
+        parcel.setInitialParcelLocker(initialLocker);
+        parcel.setFinalParcelLocker(parcelLockerList.get(parcelLockerIdx2));
+        initialLocker.addParcel(parcel);
+
     }
 
 
-    //check czy paczkomat jest pusty
-    public boolean ckeckIfEmpty(ParcelLocker parcelLocker) {
-        return parcelLockerParcelInitialMap.containsKey(parcelLocker);
+
+    public ParcelLocker randomizeInitialParcelLocker(int parcelId, int parcelLockerQty) {
+        Random random = new Random();
+
+        int result = random.nextInt(parcelLockerQty);
+        initialParcelLocker = parcelLockerList.get(result);
+        return initialParcelLocker;
     }
+
+
+    public ParcelLocker randomizeFinalParcelLocker(Parcel parcel, int parcelLockerQty) {
+        int result;
+
+        for (int i = 1; i <= parcelLockerQty; i++) {
+            initialParcelLocker = checkInitialParcelLocker(parcel);
+            Random random = new Random();
+            result = random.nextInt(parcelLockerQty);
+
+            if (initialParcelLocker.equals(parcelLockerList.get(result))) {
+                randomizeFinalParcelLocker(parcel, parcelLockerQty);
+            } else {
+                finalParcelLocker = parcelLockerList.get(result);
+            }
+        }
+        return finalParcelLocker;
+    }
+
 
     public Parcel getParcel() {
         return parcel;
@@ -75,5 +99,19 @@ public class DataBase {
 
     public Map<ParcelLocker, Parcel> getParcelLockerParcelFinalMap() {
         return parcelLockerParcelFinalMap;
+    }
+
+    @Override
+    public void run() {
+        Random r =new Random();
+        while (true){
+            createNewParcel();
+            int sleepTime = r.nextInt(500) + 800;
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
