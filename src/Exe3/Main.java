@@ -10,40 +10,27 @@ public class Main {
         DataBase dataBase = DataBase.getInstance();
         dataBase.initializeParcelLocker(10);
         dataBase.initializeParcel(50);
+       // dataBase.run();
 
-        dataBase.run();
+        //losowanie  paczkomatow dla poczatkowych paczek
+        for (Parcel p : dataBase.getParcelList())
+            dataBase.setParcelLockersInitial();
 
-
-        //losowanie poczatkowych paczkomatow
-        for (Parcel p : dataBase.getParcel().getParcelList()) {
-            p.randomizeInitialParcelLocker(p.getParcelId(), 10);
-            dataBase.getParcelLockerParcelInitialMap().put(
-                    dataBase.getParcel().getInitialParcelLocker(), p);
-        }
-
-
-        //losowanie koncowych paczkomatow
-        for (Parcel p : dataBase.getParcel().getParcelList()) {
-            p.randomizeFinalParcelLocker(p, 10);
-            dataBase.getParcelLockerParcelFinalMap().put(
-                    dataBase.getParcel().getFinalParcelLocker(), p);
-        }
 
         List<Courier> couriers = initCouriers(3);
-
-
-
     }
 
-    private static List<Courier> initCouriers (int couriersQty) {
+
+    private static List<Courier> initCouriers(int couriersQty) {
         List<Courier> courierList = new ArrayList<>();
 
-        for (int i = 0; i <couriersQty; i++){
+        for (int i = 0; i < couriersQty; i++) {
             Courier courier = new Courier();
             courier.start();
+            System.out.println(courier);
             courierList.add(courier);
         }
-            return courierList;
+        return courierList;
     }
 }
 

@@ -1,7 +1,6 @@
 package Exe3;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class ParcelLocker {
@@ -10,6 +9,8 @@ public class ParcelLocker {
     private int positionHorizontal;
     private int positionVertical;
     private Queue<Parcel> parcelList;
+    private Parcel parcel;
+
 
     public ParcelLocker() {
         parcelList = new LinkedList<>();
@@ -23,7 +24,6 @@ public class ParcelLocker {
         this.positionHorizontal = positionHorizontal;
     }
 
-
     public int getParcelLockerId() {
         return parcelLockerId;
     }
@@ -32,26 +32,27 @@ public class ParcelLocker {
         this.parcelLockerId = parcelLockerId;
     }
 
-    public void addParcel(Parcel p){
+    public void addParcel(Parcel p) {
         synchronized (parcelList) {
             parcelList.add(p);
         }
     }
 
-    public boolean isEmpty(){
-        synchronized (parcelList){
+    public boolean isEmpty() {
+        synchronized (parcelList) {
             return parcelList.isEmpty();
         }
     }
 
-    public Parcel tryGetParcel(){
-        synchronized (parcelList){
+    public Parcel tryGetParcel() {
+        synchronized (parcelList) {
             try {
                 Thread.sleep(Global.parcelPollDelay);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return parcelList.poll();
+            parcel = parcelList.poll();
+            return parcel;
         }
     }
 

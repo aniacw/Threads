@@ -6,9 +6,12 @@ public class DataBase implements Runnable {
 
     private List<ParcelLocker> parcelLockerList;
     private static DataBase instance;
-    private ParcelLocker  initialParcelLocker;
-    private ParcelLocker  finalParcelLocker;
+//    private ParcelLocker initialParcelLocker;
+//    private ParcelLocker finalParcelLocker;
     private int[] parcelLockerIndexes;
+    private List<Parcel> parcelList;
+    private int parcelLockerIdx1;
+    private int parcelLockerIdx2;
 
 
     public static DataBase getInstance() {
@@ -17,8 +20,12 @@ public class DataBase implements Runnable {
         return instance;
     }
 
+
     public DataBase() {
         parcelLockerList = new ArrayList<>();
+        parcelList = new ArrayList<>();
+        parcelLockerIdx1 = 0;
+        parcelLockerIdx2 = 0;
     }
 
 
@@ -28,84 +35,64 @@ public class DataBase implements Runnable {
             ParcelLocker parcelLocker = new ParcelLocker();
             parcelLocker.setParcelLockerId(i);
             parcelLockerList.add(parcelLocker);
-            parcelLockerIndexes[i-1] = i-1;
+            parcelLockerIndexes[i - 1] = i - 1;
         }
     }
 
 
     public void initializeParcel(int parcelQty) {
-        parcel.setParcelId(1);
-        parcel.addParcelToList(parcel);
-        for (int i = 2; i <= parcelQty; i++) {
+        for (int i = 1; i <= parcelQty; i++) {
             Parcel parcel = new Parcel();
             parcel.setParcelId(i);
-            parcel.addParcelToList(parcel);
+            parcelList.add(parcel);
         }
     }
 
+    List<Parcel> getParcelList() {
+        return parcelList;
+    }
 
-    void createNewParcel(){
+    void setParcelLockersInitial() {
+        randomizeParcelLockers();
+        for (Parcel p : parcelList)
+            setParcelLockers(p);
+    }
+
+
+    private void randomizeParcelLockers() {
         Random r = new Random();
         int i = r.nextInt(parcelLockerIndexes.length);
-        int parcelLocekrIdx1 = parcelLockerIndexes[i];
+        parcelLockerIdx1 = parcelLockerIndexes[i];
         int temp = parcelLockerIndexes[i];
-        parcelLockerIndexes[i] = parcelLockerIndexes[parcelLockerIndexes.length-1];
-        parcelLockerIndexes[parcelLockerIndexes.length-1]=temp;
-        int parcelLockerIdx2 = parcelLockerIndexes[r.nextInt(parcelLockerIndexes.length-1)];
-        Parcel parcel=new Parcel();
-        ParcelLocker initialLocker = parcelLockerList.get(parcelLocekrIdx1);
+        parcelLockerIndexes[i] = parcelLockerIndexes[parcelLockerIndexes.length - 1];
+        parcelLockerIndexes[parcelLockerIndexes.length - 1] = temp;
+        parcelLockerIdx2 = parcelLockerIndexes[r.nextInt(parcelLockerIndexes.length - 1)];
+    }
+
+
+    private void createNewParcel() {
+        randomizeParcelLockers();
+        Parcel parcel = new Parcel();
+        setParcelLockers(parcel);
+        parcelList.add(parcel);
+    }
+
+
+    public void setParcelLockers(Parcel parcel) {
+        ParcelLocker initialLocker = parcelLockerList.get(parcelLockerIdx1);
         parcel.setInitialParcelLocker(initialLocker);
         parcel.setFinalParcelLocker(parcelLockerList.get(parcelLockerIdx2));
         initialLocker.addParcel(parcel);
-
     }
 
-
-
-    public ParcelLocker randomizeInitialParcelLocker(int parcelId, int parcelLockerQty) {
-        Random random = new Random();
-
-        int result = random.nextInt(parcelLockerQty);
-        initialParcelLocker = parcelLockerList.get(result);
-        return initialParcelLocker;
-    }
-
-
-    public ParcelLocker randomizeFinalParcelLocker(Parcel parcel, int parcelLockerQty) {
-        int result;
-
-        for (int i = 1; i <= parcelLockerQty; i++) {
-            initialParcelLocker = checkInitialParcelLocker(parcel);
-            Random random = new Random();
-            result = random.nextInt(parcelLockerQty);
-
-            if (initialParcelLocker.equals(parcelLockerList.get(result))) {
-                randomizeFinalParcelLocker(parcel, parcelLockerQty);
-            } else {
-                finalParcelLocker = parcelLockerList.get(result);
-            }
-        }
-        return finalParcelLocker;
-    }
-
-
-    public Parcel getParcel() {
-        return parcel;
-    }
-
-    public Map<ParcelLocker, Parcel> getParcelLockerParcelInitialMap() {
-        return parcelLockerParcelInitialMap;
-    }
-
-    public Map<ParcelLocker, Parcel> getParcelLockerParcelFinalMap() {
-        return parcelLockerParcelFinalMap;
-    }
 
     @Override
     public void run() {
-        Random r =new Random();
-        while (true){
+        Random r = new Random();
+        while (true) {
             createNewParcel();
+            System.out.println(parcelList.get(parcelList.size()-1));
+            System.out.println(parcelList.size());
             int sleepTime = r.nextInt(500) + 800;
             try {
                 Thread.sleep(sleepTime);
@@ -113,5 +100,15 @@ public class DataBase implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    public List<ParcelLocker> getParcelLockerList() {
+        return parcelLockerList;
+    }
+
+
+    public int[] getParcelLockerIndexes() {
+        return parcelLockerIndexes;
     }
 }
